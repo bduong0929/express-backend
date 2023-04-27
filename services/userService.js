@@ -21,6 +21,38 @@ exports.register = async (username, password) => {
 };
 
 /**
+ * This function is used to validate a user's credentials
+ *
+ * @param username
+ * @param password
+ * @returns
+ */
+exports.login = async (username, password) => {
+  const foundUser = await userDao.findUserByUsername(username);
+
+  if (!foundUser) {
+    return {
+      success: false,
+      message: "Username or password is incorrect",
+    };
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, foundUser.password);
+
+  if (!isPasswordValid) {
+    return {
+      success: false,
+      message: "Username or password is incorrect",
+    };
+  }
+
+  return {
+    success: true,
+    user: foundUser,
+  };
+};
+
+/**
  * This function is used to check if a username is valid
  *
  * @param username

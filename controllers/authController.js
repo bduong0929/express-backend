@@ -1,7 +1,8 @@
 const userService = require("../services/userService");
+const tokenService = require("../services/tokenService");
 
 /**
- * This function is used to register a new user
+ * This is the endpoint used to register a new user
  *
  * @param req
  * @param res
@@ -40,6 +41,39 @@ exports.register = async (req, res, next) => {
     await userService.register(username, password);
     return res.status(201).json({
       message: "User created successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * This is the endpoint used to login a user
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
+exports.login = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+
+    const result = await userService.login(username, password);
+
+    if (!result.success) {
+      return res.status(401).json({
+        error: result.message,
+      });
+    }
+
+    const { user } = result;
+    const token = await tokenService.generateToken(user);
+    return res.status(200).json({
+      id: user.id,
+      username: user.username,
+      role_id: user.role_id,
+      token: token,
     });
   } catch (error) {
     next(error);

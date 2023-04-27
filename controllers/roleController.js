@@ -1,7 +1,7 @@
 const roleService = require("../services/roleService");
 
 /**
- * This function is used to add a new role
+ * This is the endpoint used to add a new role
  *
  * @param req - Request object
  * @param res  - Response object
