@@ -2,16 +2,17 @@ const userService = require("../services/userService");
 const tokenService = require("../services/tokenService");
 
 /**
- * This is the endpoint used to register a new user
- *
- * @param req
- * @param res
- * @param next
+ * Registers a new user
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @param {function} next - The next middleware function
+ * @returns {Promise<Object>} A promise that resolves to a JSON response
  */
 exports.register = async (req, res, next) => {
   try {
     const { username, password, confirmPassword } = req.body;
 
+    // Validate username
     if (!userService.isValidUsername(username)) {
       return res.status(422).json({
         error:
@@ -19,12 +20,14 @@ exports.register = async (req, res, next) => {
       });
     }
 
+    // Check if username is unique
     if (!(await userService.isUniqueUsername(username))) {
       return res.status(409).json({
         error: "Username already exists",
       });
     }
 
+    // Validate password
     if (!userService.isValidPassword(password)) {
       return res.status(422).json({
         error:
@@ -32,44 +35,52 @@ exports.register = async (req, res, next) => {
       });
     }
 
+    // Check if password matches confirm password
     if (!userService.isSamePassword(password, confirmPassword)) {
       return res.status(400).json({
         error: "Password and confirm password must match",
       });
     }
 
+    // Register the user
     await userService.register(username, password);
+
+    // Return success message
     return res.status(201).json({
       message: "User created successfully",
     });
   } catch (error) {
+    // Pass any errors to the error handling middleware
     next(error);
   }
 };
 
 /**
- * This is the endpoint used to login a user
- *
- * @param req
- * @param res
- * @param next
- * @returns
+ * Logs in a user
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ * @param {function} next - The next middleware function
+ * @returns {Promise<Object>} A promise that resolves to a JSON response
  */
 exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
+    // Attempt to log in the user
     const result = await userService.login(username, password);
 
+    // If login is unsuccessful, return error message
     if (!result.success) {
       return res.status(401).json({
         error: result.message,
       });
     }
 
+    // If login is successful, generate a token
     const { user } = result;
     const token = await tokenService.generateToken(user);
 
+    // Return user details and token
     return res.status(200).json({
       id: user.id,
       username: user.username,
@@ -77,6 +88,7 @@ exports.login = async (req, res, next) => {
       token: token,
     });
   } catch (error) {
+    // Pass any errors to the error handling middleware
     next(error);
   }
 };

@@ -1,10 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/config");
-const Role = require("./role");
 
-/**
- * Create a new user model
- */
+// Define the User model
 const User = sequelize.define(
   "users",
   {
@@ -29,11 +26,7 @@ const User = sequelize.define(
   }
 );
 
-/**
- * Create a many-to-one relationship between user and role
- *
- * associate is used to prevent circular dependencies
- */
+// Define associations
 User.associate = (models) => {
   User.belongsTo(models.Role, {
     foreignKey: {
