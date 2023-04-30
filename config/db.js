@@ -1,13 +1,14 @@
-const { pool } = require("pg");
+const { Pool } = require("pg");
 const dotenv = require("dotenv");
 
-dotenv.config(); // load environment variables
+dotenv.config(); // Load environment variables from .env file
 
 /**
- * This pool will be shared by all other modules that require this file
+ * A shared instance of the PostgreSQL connection pool
+ * @type {Pool}
  */
-const pool = new Pool({
+const pgPool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-module.exports = pool; // export the pool so that it is shared across all modules
+module.exports = pgPool;
