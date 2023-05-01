@@ -1,5 +1,6 @@
 const userService = require("../services/userService");
 const tokenService = require("../services/tokenService");
+const logger = require("../utils/logger");
 
 /**
  * Registers a new user
@@ -10,6 +11,7 @@ const tokenService = require("../services/tokenService");
  */
 exports.register = async (req, res, next) => {
   try {
+    logger.info("Register request received:", req.body);
     const { username, password, confirmPassword } = req.body;
 
     // Validate username
@@ -45,11 +47,14 @@ exports.register = async (req, res, next) => {
     // Register the user
     await userService.register(username, password);
 
+    logger.info("User registered successfully:");
+
     // Return success message
     return res.status(201).json({
       message: "User created successfully",
     });
   } catch (error) {
+    logger.error("Error during registration:", error);
     // Pass any errors to the error handling middleware
     next(error);
   }
@@ -64,6 +69,7 @@ exports.register = async (req, res, next) => {
  */
 exports.login = async (req, res, next) => {
   try {
+    logger.info("Login request received:", req.body);
     const { username, password } = req.body;
 
     // Attempt to log in the user
@@ -80,6 +86,8 @@ exports.login = async (req, res, next) => {
     const { user } = result;
     const token = await tokenService.generateToken(user);
 
+    logger.info("User logged in successfully");
+
     // Return user details and token
     return res.status(200).json({
       id: user.id,
@@ -88,6 +96,7 @@ exports.login = async (req, res, next) => {
       token: token,
     });
   } catch (error) {
+    logger.error("Error during registration:", error);
     // Pass any errors to the error handling middleware
     next(error);
   }
