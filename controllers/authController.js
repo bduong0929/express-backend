@@ -11,7 +11,7 @@ const logger = require("../utils/logger");
  */
 exports.register = async (req, res, next) => {
   try {
-    logger.info("Register request received:", req.body);
+    logger.info(`Registration request received: ${JSON.stringify(req.body)}`);
     const { username, password, confirmPassword } = req.body;
 
     // Validate username
@@ -54,7 +54,7 @@ exports.register = async (req, res, next) => {
       message: "User created successfully",
     });
   } catch (error) {
-    logger.error("Error during registration:", error);
+    logger.info(`Error during registration: ${error}`);
     // Pass any errors to the error handling middleware
     next(error);
   }
@@ -69,7 +69,7 @@ exports.register = async (req, res, next) => {
  */
 exports.login = async (req, res, next) => {
   try {
-    logger.info("Login request received:", req.body);
+    logger.info(`Login request received: ${JSON.stringify(req.body)}`);
     const { username, password } = req.body;
 
     // Attempt to log in the user
@@ -96,7 +96,7 @@ exports.login = async (req, res, next) => {
       token: token,
     });
   } catch (error) {
-    logger.error("Error during registration:", error);
+    logger.info(`Error during login: ${error}`);
     // Pass any errors to the error handling middleware
     next(error);
   }

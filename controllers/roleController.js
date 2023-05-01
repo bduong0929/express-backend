@@ -10,7 +10,7 @@ const logger = require("../utils/logger");
  */
 exports.addRole = async (req, res, next) => {
   try {
-    logger.info("Add role request received:", req.body); // Log the request
+    logger.info(`Add role request received: ${JSON.stringify(req.body)}`); // Log the request
 
     // Destructure name from request body
     const { name } = req.body;
@@ -22,10 +22,10 @@ exports.addRole = async (req, res, next) => {
 
     // Add new role, set the status to 201 and return the new role
     const newRole = await roleService.addRole(name);
-    logger.info("New role created:", newRole); // Log the created role
+    logger.info(`New role created: ${JSON.stringify(newRole)}`); // Log the created role
     return res.status(201).json(newRole);
   } catch (error) {
-    logger.error("Error adding role:", error); // Log any errors
+    logger.error(`Error adding role: ${error}`); // Log the error
     // Pass any errors to the error handling middleware
     next(error);
   }
