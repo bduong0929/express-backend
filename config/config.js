@@ -1,15 +1,16 @@
 const { Sequelize } = require("sequelize");
 const dotenv = require("dotenv");
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: "postgres", // Set the dialect to 'postgres'
-  logging: false, // Disable logging for production
+const sequelize = new Sequelize({
+  // Your database connection configuration
+  dialect: "postgres", // or another supported dialect
+  host: "localhost",
+  port: 5432,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
-/**
- * A shared instance of the Sequelize connection pool
- * @type {Sequelize}
- */
 module.exports = sequelize;

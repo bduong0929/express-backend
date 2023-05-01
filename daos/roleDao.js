@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const Role = require("../models/role");
 
 /**

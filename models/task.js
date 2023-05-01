@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/config"); // Adjust the path to your Sequelize instance
 
-class Role extends Model {}
+class Task extends Model {}
 
-Role.init(
+Task.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,24 +12,30 @@ Role.init(
     },
     name: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    completed: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      unique: true,
     },
   },
   {
     sequelize,
-    modelName: "roles",
+    modelName: "tasks",
     schema: "express",
     timestamps: false,
   }
 );
 
-Role.associate = (models) => {
-  Role.hasMany(models.User, {
+Task.associate = (models) => {
+  Task.belongsTo(models.User, {
     foreignKey: {
-      name: "role_id",
+      name: "user_id",
+      allowNull: false,
     },
+    onDelete: "CASCADE",
+    targetKey: "id",
   });
 };
 
-module.exports = Role;
+module.exports = Task;

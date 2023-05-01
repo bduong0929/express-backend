@@ -1,9 +1,9 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/config");
 
-// Define the User model
-const User = sequelize.define(
-  "users",
+class User extends Model {}
+
+User.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -21,12 +21,13 @@ const User = sequelize.define(
     },
   },
   {
+    sequelize,
+    modelName: "users",
     schema: "express",
     timestamps: false,
   }
 );
 
-// Define associations
 User.associate = (models) => {
   User.belongsTo(models.Role, {
     foreignKey: {
@@ -35,6 +36,12 @@ User.associate = (models) => {
     },
     onDelete: "CASCADE",
     targetKey: "id",
+  });
+
+  User.hasMany(models.Task, {
+    foreignKey: {
+      name: "user_id",
+    },
   });
 };
 
