@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/config"); // Adjust the path to your Sequelize instance
+const sequelize = require("../config/sequelize"); // Adjust the path to your Sequelize instance
 
-class Role extends Model {}
+class Role extends Model { }
 
 Role.init(
   {
@@ -23,13 +23,5 @@ Role.init(
     timestamps: false,
   }
 );
-
-Role.associate = (models) => {
-  Role.hasMany(models.User, {
-    foreignKey: {
-      name: "role_id",
-    },
-  });
-};
 
 module.exports = Role;

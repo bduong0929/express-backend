@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/config");
+const sequelize = require("../config/sequelize");
 
-class User extends Model {}
+class User extends Model { }
 
 User.init(
   {
@@ -27,22 +27,5 @@ User.init(
     timestamps: false,
   }
 );
-
-User.associate = (models) => {
-  User.belongsTo(models.Role, {
-    foreignKey: {
-      name: "role_id",
-      allowNull: false,
-    },
-    onDelete: "CASCADE",
-    targetKey: "id",
-  });
-
-  User.hasMany(models.Task, {
-    foreignKey: {
-      name: "user_id",
-    },
-  });
-};
 
 module.exports = User;

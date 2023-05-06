@@ -84,7 +84,7 @@ exports.login = async (req, res, next) => {
 
     // If login is successful, generate a token
     const { user } = result;
-    const token = await tokenService.generateToken(user);
+    const token = tokenService.generateToken(user);
 
     logger.info("User logged in successfully");
 
